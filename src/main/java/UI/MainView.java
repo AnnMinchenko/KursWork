@@ -1,5 +1,6 @@
 package UI;
 
+import model.Person;
 import model.Record;
 import db.DbHandler;
 
@@ -176,38 +177,8 @@ public class MainView extends JFrame {
     Action addPerson = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            var persons = handler.getPersonsList();
-            Object[] personsNames = new Object[persons.size()];
-            for (var i = 0; i < persons.size(); i++) {
-                var person = persons.get(i);
-                personsNames[i] = String.format("%s - %s", person.getId(), person.getFullName());
-            }
 
-            if (persons.size() == 0) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Список клиентов пуст",
-                        "Ошибка",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                return;
-            }
-
-            //Клиент
-            var person = (String) JOptionPane.showInputDialog(
-                    null,
-                    "ФИО клиента:",
-                    "Новая запись",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    personsNames,
-                    personsNames[0]
-            );
-            if (person == null) {
-                return;
-            }
-////////////////////////////////
-            //ФИО
+            //ФИО+
             var fullName = "";
             while (Objects.equals(fullName, "")) {
                 fullName = JOptionPane.showInputDialog(
@@ -221,90 +192,43 @@ public class MainView extends JFrame {
                 }
             }
 
-            //Сумма выплаты
-            var payment = "";
-            while (Objects.equals(payment, "") || !NUMBER_PATTERN.matcher(payment).matches()) {
-                payment = JOptionPane.showInputDialog(
+            //Номер телефона+
+            var phoneNumber = "";
+            while (Objects.equals(phoneNumber, "") || !NUMBER_PATTERN.matcher(phoneNumber).matches()) {
+                phoneNumber = JOptionPane.showInputDialog(
                         null,
-                        "Сумма выплаты:",
+                        "Номер телефона:",
                         "Новая запись",
                         JOptionPane.QUESTION_MESSAGE
                 );
-                if (payment == null) {
+                if (phoneNumber == null) {
                     return;
                 }
             }
 
-            //Дата
-            var date = "";
-            while (Objects.equals(date, "") || !DATE_PATTERN.matcher(date).matches()) {
-                date = JOptionPane.showInputDialog(
+
+            //Адрес+
+            var address = "";
+            while (Objects.equals(address, "")) {
+                address = JOptionPane.showInputDialog(
                         null,
-                        "Дата выплаты (год-месяц-день):",
+                        "Адрес:",
                         "Новая запись",
                         JOptionPane.QUESTION_MESSAGE
                 );
-                if (date == null) {
+                if (address == null) {
                     return;
                 }
             }
 
-            //Месяц выплаты
-            var monthOfPayment = "";
-            while (Objects.equals(monthOfPayment, "") || !MONTH_PATTERN.matcher(monthOfPayment).matches()) {
-                monthOfPayment = JOptionPane.showInputDialog(
-                        null,
-                        "Месяц выплаты:",
-                        "Новая запись",
-                        JOptionPane.QUESTION_MESSAGE
-                );
-                if (monthOfPayment == null) {
-                    return;
-                }
-            }
-
-            //Цена приобретения
-            var cost = "";
-            while (Objects.equals(cost, "") || !NUMBER_PATTERN.matcher(cost).matches()) {
-                cost = JOptionPane.showInputDialog(
-                        null,
-                        "Цена приобретения:",
-                        "Новая запись",
-                        JOptionPane.QUESTION_MESSAGE
-                );
-                if (cost == null) {
-                    return;
-                }
-            }
-
-            //Организация
-            var organization = "";
-            while (Objects.equals(organization, "")) {
-                organization = JOptionPane.showInputDialog(
-                        null,
-                        "Организация:",
-                        "Новая запись",
-                        JOptionPane.QUESTION_MESSAGE
-                );
-                if (organization == null) {
-                    return;
-                }
-            }
-
-            var personObject = handler.getPerson(Integer.parseInt(person.split(" ")[0]));
-
-            var record = new Record(
+            var person = new Person(
                     handler.getRecordsList().size(),
-                    personObject,
                     fullName,
-                    Integer.parseInt(payment),
-                    date,
-                    Integer.parseInt(monthOfPayment),
-                    Integer.parseInt(cost),
-                    organization
+                    phoneNumber,
+                    address
             );
 
-            handler.addRecord(record);
+            handler.addPerson(person);
         }
     };
 
@@ -393,7 +317,7 @@ public class MainView extends JFrame {
         editButton.addActionListener(editRecord);
         removeButton.addActionListener(removeRecord);
         showPersonsListButton.addActionListener(showPersonsList);
-        addPersonButton.addActionListener(createRecord);
+        addPersonButton.addActionListener(addPerson);
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
