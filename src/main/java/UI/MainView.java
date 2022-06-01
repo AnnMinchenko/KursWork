@@ -18,7 +18,7 @@ import static javax.swing.GroupLayout.Alignment.LEADING;
 public class MainView extends JFrame {
     private static final Pattern DATE_PATTERN = Pattern.compile(
             "^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$");
-    private static final Pattern MONTH_PATTERN = Pattern.compile("^([1-9]|[0-1][0-2])$");
+    private static final Pattern MONTH_PATTERN = Pattern.compile("^((19|2[0-9])[0-9]{2})-([1-9]|[0-1][0-2])$");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]+$");
 
     private DbHandler handler;
@@ -34,7 +34,7 @@ public class MainView extends JFrame {
     private JButton showPersonsListButton = new JButton("Список клиентов");
 
     Object[] tableHeaders = {
-        "ID", "ФИО", "Наименование ТСР", "Выплата", "Дата",
+        "ID", "ФИО", "Наименование ТСР", "Выплата", "Дата назначения",
         "Месяц выплаты", "Предельный срок приобретения", "Стоимость", "Организация"
     };
 
@@ -105,7 +105,7 @@ public class MainView extends JFrame {
             while (Objects.equals(date, "") || !DATE_PATTERN.matcher(date).matches()) {
                 date = JOptionPane.showInputDialog(
                         null,
-                        "Дата выплаты (год-месяц-день):",
+                        "Дата назначения (год-месяц-день):",
                         "Новая запись",
                         JOptionPane.QUESTION_MESSAGE
                 );
@@ -119,7 +119,7 @@ public class MainView extends JFrame {
             while (Objects.equals(monthOfPayment, "") || !MONTH_PATTERN.matcher(monthOfPayment).matches()) {
                 monthOfPayment = JOptionPane.showInputDialog(
                         null,
-                        "Месяц выплаты:",
+                        "Месяц выплаты (год-месяц):",
                         "Новая запись",
                         JOptionPane.QUESTION_MESSAGE
                 );
@@ -164,7 +164,7 @@ public class MainView extends JFrame {
                     name,
                     Integer.parseInt(payment),
                     date,
-                    Integer.parseInt(monthOfPayment),
+                    monthOfPayment,
                     Integer.parseInt(cost),
                     organization
             );
@@ -262,7 +262,7 @@ public class MainView extends JFrame {
             }
             var id = (int) table.getModel().getValueAt(row, 0);
 
-            handler.deletePerson(id);
+            handler.deleteRecord(id);
             showRecordsList();
         }
     };
@@ -358,8 +358,8 @@ public class MainView extends JFrame {
         model.setRowCount(0);
         for (var record : recordsList) {
             model.addRow (new Object[] {
-                    record.getPerson().getFullName(),
                     record.getId(),
+                    record.getPerson().getFullName(),
                     record.getName(),
                     record.getPayment(),
                     record.getDate(),

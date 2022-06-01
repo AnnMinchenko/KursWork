@@ -13,7 +13,6 @@ import java.util.List;
 
 public class DbHandler {
     private static final String CONNECTION_STR = "jdbc:sqlite:C://sqlite/project.db";
-    private static DbHandler instance = null;
 
     private final Connection connection;
 
@@ -21,13 +20,6 @@ public class DbHandler {
         DriverManager.registerDriver(new JDBC());
         this.connection = DriverManager.getConnection(CONNECTION_STR);
         createTables();
-    }
-
-    public static synchronized DbHandler getInstance() throws SQLException {
-        if (instance == null) {
-            instance = new DbHandler();
-        }
-        return instance;
     }
 
     private void createTables() {
@@ -134,7 +126,7 @@ public class DbHandler {
                                 result.getString("name"),
                                 result.getInt("payment"),
                                 result.getString("date"),
-                                result.getInt("monthOfPayment"),
+                                result.getString("monthOfPayment"),
                                 result.getInt("cost"),
                                 result.getString("organization")
                         )

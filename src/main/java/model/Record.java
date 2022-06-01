@@ -6,12 +6,12 @@ public class Record {
     private String name;
     private int payment;
     private String date;
-    private int monthOfPayment;
-    private int purchaseDeadline;
+    private String monthOfPayment;
+    private String purchaseDeadline;
     private int cost;
     private String organization;
 
-    public Record(int id, Person person, String name, int payment, String date, int monthOfPayment, int cost, String organization) {
+    public Record(int id, Person person, String name, int payment, String date, String monthOfPayment, int cost, String organization) {
         this.id = id;
         this.person = person;
         this.name = name;
@@ -43,11 +43,11 @@ public class Record {
         return date;
     }
 
-    public int getMonthOfPayment() {
+    public String getMonthOfPayment() {
         return monthOfPayment;
     }
 
-    public int getPurchaseDeadline() {
+    public String getPurchaseDeadline() {
         return purchaseDeadline;
     }
 
@@ -60,13 +60,20 @@ public class Record {
     }
 
     private void calculatePurchaseDeadline() {
-        var temp = monthOfPayment + 5;
-        if (temp > 12) {
-            purchaseDeadline = temp - 12;
+        String[] string = monthOfPayment.split("-");
+        int[] dates = new int[2];
+        dates[0] = Integer.parseInt(string[0]);
+        dates[1] = Integer.parseInt(string[1]);
+
+        var tempMonth = dates[1] + 5;
+        var tempYear = dates[0];
+
+        if (tempMonth > 12) {
+            tempMonth = tempMonth - 12;
+            tempYear =+ 1;
         }
-        else {
-            purchaseDeadline = temp;
-        }
+
+        purchaseDeadline = tempYear + "-" + tempMonth;
     }
 
     @Override
