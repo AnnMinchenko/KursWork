@@ -20,6 +20,7 @@ public class MainView extends JFrame {
             "^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$");
     private static final Pattern MONTH_PATTERN = Pattern.compile("^((19|2[0-9])[0-9]{2})-([1-9]|[0-1][0-2])$");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]+$");
+    private static final Pattern TELEPHONE_PATTERN = Pattern.compile("^89([1-9]{9})$");
 
     private DbHandler handler;
     private MainView mainView = this;
@@ -194,7 +195,7 @@ public class MainView extends JFrame {
 
             //Номер телефона+
             var phoneNumber = "";
-            while (Objects.equals(phoneNumber, "") || !NUMBER_PATTERN.matcher(phoneNumber).matches()) {
+            while (Objects.equals(phoneNumber, "") || !TELEPHONE_PATTERN.matcher(phoneNumber).matches()) {
                 phoneNumber = JOptionPane.showInputDialog(
                         null,
                         "Номер телефона:",
