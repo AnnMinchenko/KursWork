@@ -21,11 +21,12 @@ public class PersonsView extends JDialog {
     MainView mainView;
 
     Object[] tableHeaders = {
-            "ID", "ФИО", "Номер телефона", "Выплата"
+            "ID", "ФИО", "Номер телефона", "Адрес"
     };
 
     public PersonsView(MainView mainView) {
         this.mainView = mainView;
+        handler = mainView.handler;
         setTitle("Список клиентов");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -109,10 +110,10 @@ public class PersonsView extends JDialog {
         table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
         table.getColumnModel().getColumn(0).setMinWidth(30);
-        table.getColumnModel().getColumn(1).setMinWidth(300);
+        table.getColumnModel().getColumn(1).setMinWidth(200);
         table.getColumnModel().getColumn(2).setMinWidth(200);
         table.getColumnModel().getColumn(3).setMinWidth(150);
-        table.setPreferredScrollableViewportSize(new Dimension(500,500));
+        table.setPreferredScrollableViewportSize(new Dimension(600,500));
         addPersonButton.addActionListener(addPerson);
 
         layout.setAutoCreateGaps(true);

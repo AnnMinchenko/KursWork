@@ -22,7 +22,7 @@ public class MainView extends JFrame {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]+$");
     private static final Pattern TELEPHONE_PATTERN = Pattern.compile("^89([1-9]{9})$");
 
-    private DbHandler handler;
+    public DbHandler handler;
     private MainView mainView = this;
 
     private JTable table;
@@ -30,7 +30,6 @@ public class MainView extends JFrame {
     private JButton addButton = new JButton("Добавить запись");
     private JButton editButton = new JButton("Изменить запись");
     private JButton removeButton = new JButton("Удалить запись");
-    private JButton addPersonButton = new JButton("Добавить клиента");
 
     private JButton showPersonsListButton = new JButton("Список клиентов");
 
@@ -354,7 +353,6 @@ public class MainView extends JFrame {
         editButton.addActionListener(editRecord);
         removeButton.addActionListener(removeRecord);
         showPersonsListButton.addActionListener(showPersonsList);
-        addPersonButton.addActionListener(addPerson);
         paymentSumButton.addActionListener(paymentSum);
 
         layout.setAutoCreateGaps(true);
@@ -366,7 +364,6 @@ public class MainView extends JFrame {
                     .addComponent(editButton)
                     .addComponent(removeButton)
                     .addComponent(showPersonsListButton)
-                    .addComponent(addPersonButton)
                     .addComponent(paymentSumButton)
             )
         );
@@ -384,8 +381,6 @@ public class MainView extends JFrame {
                             .addComponent(removeButton))
                     .addGroup(layout.createParallelGroup(BASELINE)
                             .addComponent(showPersonsListButton))
-                    .addGroup(layout.createParallelGroup(BASELINE)
-                            .addComponent(addPersonButton))
                     .addGroup(layout.createParallelGroup(BASELINE)
                             .addComponent(paymentSumButton))
                 )
