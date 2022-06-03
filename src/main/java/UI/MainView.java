@@ -15,7 +15,38 @@ import java.util.regex.Pattern;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
+
 public class MainView extends JFrame {
+
+
+    private static final class JGradientButton extends JButton{
+        private JGradientButton(String text){
+            super(text);
+            setContentAreaFilled(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g){
+            Graphics2D g2 = (Graphics2D)g.create();
+            g2.setPaint(new GradientPaint(
+                    new Point(0, 0),
+                    getBackground(),
+                    new Point(0, getHeight()/3),
+                    Color.WHITE));
+            g2.fillRect(0, 0, getWidth(), getHeight()/3);
+            g2.setPaint(new GradientPaint(
+                    new Point(0, getHeight()/3),
+                    Color.WHITE,
+                    new Point(0, getHeight()),
+                    getBackground()));
+            g2.fillRect(0, getHeight()/3, getWidth(), getHeight());
+            g2.dispose();
+
+            super.paintComponent(g);
+        }
+    }
+
+
     private static final Pattern DATE_PATTERN = Pattern.compile(
             "^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$");
     private static final Pattern MONTH_PATTERN = Pattern.compile("^((19|2[0-9])[0-9]{2})-([1-9]|[0-1][0-2])$");
@@ -27,13 +58,13 @@ public class MainView extends JFrame {
 
     private JTable table;
 
-    private JButton addButton = new JButton("Добавить запись");
-    private JButton editButton = new JButton("Изменить запись");
-    private JButton removeButton = new JButton("Удалить запись");
+    private JGradientButton addButton = new JGradientButton("Добавить запись");
+    private JGradientButton editButton = new JGradientButton("Изменить запись");
+    private JGradientButton removeButton = new JGradientButton("Удалить запись");
 
-    private JButton showPersonsListButton = new JButton("Список клиентов");
+    private JGradientButton showPersonsListButton = new JGradientButton("Список клиентов");
 
-    private JButton paymentSumButton = new JButton("Сумма выплат");
+    private JGradientButton paymentSumButton = new JGradientButton("Сумма выплат");
 
     Object[] tableHeaders = {
         "ID", "ФИО", "Наименование ТСР", "Выплата", "Дата назначения",
@@ -350,10 +381,15 @@ public class MainView extends JFrame {
         table.getColumnModel().getColumn(8).setMinWidth(200);
         table.setPreferredScrollableViewportSize(new Dimension(1390,500));
         addButton.addActionListener(createRecord);
+        addButton.setBackground(new Color(111,195,237));
         editButton.addActionListener(editRecord);
+        editButton.setBackground(new Color(111,195,237));
         removeButton.addActionListener(removeRecord);
-        showPersonsListButton.addActionListener(showPersonsList);
+        removeButton.setBackground(new Color(111,195,237));
         paymentSumButton.addActionListener(paymentSum);
+        paymentSumButton.setBackground(new Color(111,237,187));
+        showPersonsListButton.addActionListener(showPersonsList);
+        showPersonsListButton.setBackground(new Color(143,111,237));
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
@@ -380,9 +416,9 @@ public class MainView extends JFrame {
                     .addGroup(layout.createParallelGroup(BASELINE)
                             .addComponent(removeButton))
                     .addGroup(layout.createParallelGroup(BASELINE)
-                            .addComponent(showPersonsListButton))
-                    .addGroup(layout.createParallelGroup(BASELINE)
                             .addComponent(paymentSumButton))
+                    .addGroup(layout.createParallelGroup(BASELINE)
+                            .addComponent(showPersonsListButton))
                 )
             )
         );
