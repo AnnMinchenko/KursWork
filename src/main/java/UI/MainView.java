@@ -38,7 +38,7 @@ public class MainView extends JFrame {
 
     Object[] tableHeaders = {
         "ID", "ФИО", "Наименование ТСР", "Выплата", "Дата назначения",
-        "Месяц выплаты", "Предельный срок приобретения", "Стоимость", "Организация"
+        "Месяц выплаты", "Предельный срок", "Стоимость", "Организация"
     };
 
     Action createRecord = new AbstractAction() {
@@ -162,7 +162,7 @@ public class MainView extends JFrame {
             var personObject = handler.getPerson(Integer.parseInt(person.split(" ")[0]));
 
             var record = new Record(
-                    handler.getRecordsList().size(),
+                    handler.getRecordsList().get(handler.getRecordsList().size()-1).getId()+1,
                     personObject,
                     name,
                     Integer.parseInt(payment),

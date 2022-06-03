@@ -211,16 +211,4 @@ public class DbHandler {
             return 0;
         }
     }
-
-    public void getCostSum(String quarter, String year) { //TODO
-        try (var statement = this.connection.prepareStatement(
-                "SELECT SUM(payment) FROM records WHERE id = ? + ? + ?"
-        )) {
-            statement.setObject(1, year);
-            statement.setObject(2, quarter);
-            statement.execute();
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-    }
 }
