@@ -169,4 +169,58 @@ public class DbHandler {
             exception.printStackTrace();
         }
     }
+
+    public int getPaymentSum(String quarter, String year) {
+        String month1 = "";
+        String month2 = "";
+        String month3 = "";
+
+        switch (quarter) {
+            case "1":
+                month1 = year + "-1";
+                month2 = year + "-2";
+                month3 = year + "-3";
+                break;
+            case "2":
+                month1 = year + "-4";
+                month2 = year + "-5";
+                month3 = year + "-6";
+                break;
+            case "3":
+                month1 = year + "-7";
+                month2 = year + "-8";
+                month3 = year + "-9";
+                break;
+            case "4":
+                month1 = year + "-10";
+                month2 = year + "-11";
+                month3 = year + "-12";
+                break;
+        }
+        try (var statement = this.connection.prepareStatement(
+                "SELECT SUM(payment) AS Sum FROM records WHERE monthOfPayment = ? OR monthOfPayment = ? OR monthOfPayment = ?"
+        )) {
+            statement.setString(1, month1);
+            statement.setString(2, month2);
+            statement.setString(3, month3);
+            statement.execute();
+            var result = statement.executeQuery();
+            return result.getInt("Sum");
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            return 0;
+        }
+    }
+
+    public void getCostSum(String quarter, String year) { //TODO
+        try (var statement = this.connection.prepareStatement(
+                "SELECT SUM(payment) FROM records WHERE id = ? + ? + ?"
+        )) {
+            statement.setObject(1, year);
+            statement.setObject(2, quarter);
+            statement.execute();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
 }

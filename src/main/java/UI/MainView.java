@@ -34,6 +34,8 @@ public class MainView extends JFrame {
 
     private JButton showPersonsListButton = new JButton("Список клиентов");
 
+    private JButton paymentSumButton = new JButton("Сумма выплат");
+
     Object[] tableHeaders = {
         "ID", "ФИО", "Наименование ТСР", "Выплата", "Дата назначения",
         "Месяц выплаты", "Предельный срок приобретения", "Стоимость", "Организация"
@@ -275,6 +277,40 @@ public class MainView extends JFrame {
         }
     };
 
+    Action paymentSum = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            var year = "";
+            while (Objects.equals(year, "")) {
+                year = JOptionPane.showInputDialog(
+                        null,
+                        "Год:",
+                        "Сумма выплат",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (year == null) {
+                    return;
+                }
+            }
+
+            var quarter = "";
+            while (Objects.equals(quarter, "")) {
+                quarter = JOptionPane.showInputDialog(
+                        null,
+                        "Квартал:",
+                        "Сумма выплат",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (quarter == null) {
+                    return;
+                }
+            }
+
+            JOptionPane.showMessageDialog(null, "Сумма выплат " + handler.getPaymentSum(quarter,year));
+
+        }
+    };
+
     public MainView() {
         try {
              handler = new DbHandler();
@@ -319,6 +355,7 @@ public class MainView extends JFrame {
         removeButton.addActionListener(removeRecord);
         showPersonsListButton.addActionListener(showPersonsList);
         addPersonButton.addActionListener(addPerson);
+        paymentSumButton.addActionListener(paymentSum);
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
@@ -330,6 +367,7 @@ public class MainView extends JFrame {
                     .addComponent(removeButton)
                     .addComponent(showPersonsListButton)
                     .addComponent(addPersonButton)
+                    .addComponent(paymentSumButton)
             )
         );
         layout.linkSize(SwingConstants.HORIZONTAL, addButton, showPersonsListButton);
@@ -348,6 +386,8 @@ public class MainView extends JFrame {
                             .addComponent(showPersonsListButton))
                     .addGroup(layout.createParallelGroup(BASELINE)
                             .addComponent(addPersonButton))
+                    .addGroup(layout.createParallelGroup(BASELINE)
+                            .addComponent(paymentSumButton))
                 )
             )
         );
