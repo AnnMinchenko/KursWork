@@ -191,8 +191,16 @@ public class MainView extends JFrame {
 
             var personObject = handler.getPerson(Integer.parseInt(person.split(" ")[0]));
 
+            int id;
+            var temp = handler.getRecordsList().size()-1;
+            if (temp < 0)
+                id = 0;
+            else
+                id = handler.getRecordsList().get(handler.getRecordsList().size()-1).getId()+1;
+
+
             var record = new Record(
-                    handler.getRecordsList().get(handler.getRecordsList().size()-1).getId()+1,
+                    id,
                     personObject,
                     name,
                     Integer.parseInt(payment),
@@ -207,68 +215,142 @@ public class MainView extends JFrame {
         }
     };
 
-    Action addPerson = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            //ФИО+
-            var fullName = "";
-            while (Objects.equals(fullName, "")) {
-                fullName = JOptionPane.showInputDialog(
-                        null,
-                        "ФИО:",
-                        "Новая запись",
-                        JOptionPane.QUESTION_MESSAGE
-                );
-                if (fullName == null) {
-                    return;
-                }
-            }
-
-            //Номер телефона+
-            var phoneNumber = "";
-            while (Objects.equals(phoneNumber, "") || !TELEPHONE_PATTERN.matcher(phoneNumber).matches()) {
-                phoneNumber = JOptionPane.showInputDialog(
-                        null,
-                        "Номер телефона:",
-                        "Новая запись",
-                        JOptionPane.QUESTION_MESSAGE
-                );
-                if (phoneNumber == null) {
-                    return;
-                }
-            }
-
-
-            //Адрес+
-            var address = "";
-            while (Objects.equals(address, "")) {
-                address = JOptionPane.showInputDialog(
-                        null,
-                        "Адрес:",
-                        "Новая запись",
-                        JOptionPane.QUESTION_MESSAGE
-                );
-                if (address == null) {
-                    return;
-                }
-            }
-
-            var person = new Person(
-                    handler.getRecordsList().size(),
-                    fullName,
-                    phoneNumber,
-                    address
-            );
-
-            handler.addPerson(person);
-        }
-    };
-
     Action editRecord = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Запись не выбрана",
+                        "Ошибка",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
 
+            var persons = handler.getPersonsList();
+            Object[] personsNames = new Object[persons.size()];
+            for (var i = 0; i < persons.size(); i++) {
+                var person = persons.get(i);
+                personsNames[i] = String.format("%s - %s", person.getId(), person.getFullName());
+            }
+
+            //Клиент
+            var person = (String) JOptionPane.showInputDialog(
+                    null,
+                    "ФИО клиента:",
+                    "Новая запись",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    personsNames,
+                    personsNames[0]
+            );
+            if (person == null) {
+                return;
+            }
+
+            //Название ТСР
+            var name = "";
+            while (Objects.equals(name, "")) {
+                name = JOptionPane.showInputDialog(
+                        null,
+                        "Название ТСР:",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (name == null) {
+                    return;
+                }
+            }
+
+            //Сумма выплаты
+            var payment = "";
+            while (Objects.equals(payment, "") || !NUMBER_PATTERN.matcher(payment).matches()) {
+                payment = JOptionPane.showInputDialog(
+                        null,
+                        "Сумма выплаты:",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (payment == null) {
+                    return;
+                }
+            }
+
+            //Дата
+            var date = "";
+            while (Objects.equals(date, "") || !DATE_PATTERN.matcher(date).matches()) {
+                date = JOptionPane.showInputDialog(
+                        null,
+                        "Дата назначения (год-месяц-день):",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (date == null) {
+                    return;
+                }
+            }
+
+            //Месяц выплаты
+            var monthOfPayment = "";
+            while (Objects.equals(monthOfPayment, "") || !MONTH_PATTERN.matcher(monthOfPayment).matches()) {
+                monthOfPayment = JOptionPane.showInputDialog(
+                        null,
+                        "Месяц выплаты (год-месяц):",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (monthOfPayment == null) {
+                    return;
+                }
+            }
+
+            //Цена приобретения
+            var cost = "";
+            while (Objects.equals(cost, "") || !NUMBER_PATTERN.matcher(cost).matches()) {
+                cost = JOptionPane.showInputDialog(
+                        null,
+                        "Цена приобретения:",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (cost == null) {
+                    return;
+                }
+            }
+
+            //Организация
+            var organization = "";
+            while (Objects.equals(organization, "")) {
+                organization = JOptionPane.showInputDialog(
+                        null,
+                        "Организация:",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (organization == null) {
+                    return;
+                }
+            }
+
+            var personObject = handler.getPerson(Integer.parseInt(person.split(" ")[0]));
+
+            var id = (int) table.getModel().getValueAt(row, 0);
+
+            var record = new Record(
+                    id,
+                    personObject,
+                    name,
+                    Integer.parseInt(payment),
+                    date,
+                    monthOfPayment,
+                    Integer.parseInt(cost),
+                    organization
+            );
+
+            handler.editRecord(record, id);
+            showRecordsList();
         }
     };
 
@@ -285,6 +367,7 @@ public class MainView extends JFrame {
                 );
                 return;
             }
+
             int choose = JOptionPane.showConfirmDialog(
                     null,
                     "Вы действительно хотите удалить запись?",
@@ -379,7 +462,7 @@ public class MainView extends JFrame {
         table.getColumnModel().getColumn(6).setMinWidth(100);
         table.getColumnModel().getColumn(7).setMinWidth(150);
         table.getColumnModel().getColumn(8).setMinWidth(200);
-        table.setPreferredScrollableViewportSize(new Dimension(1390,500));
+        table.setPreferredScrollableViewportSize(new Dimension(1300,500));
         addButton.addActionListener(createRecord);
         addButton.setBackground(new Color(111,195,237));
         editButton.addActionListener(editRecord);
@@ -403,7 +486,6 @@ public class MainView extends JFrame {
                     .addComponent(paymentSumButton)
             )
         );
-        layout.linkSize(SwingConstants.HORIZONTAL, addButton, showPersonsListButton);
 
         layout.setVerticalGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(BASELINE)
@@ -424,7 +506,7 @@ public class MainView extends JFrame {
         );
     }
 
-    private void showRecordsList() {
+    void showRecordsList() {
         var recordsList = handler.getRecordsList();
         var model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);

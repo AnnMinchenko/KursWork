@@ -24,6 +24,7 @@ public class DbHandler {
 
     private void createTables() {
         try (var statement = this.connection.createStatement()) {
+            statement.executeUpdate("PRAGMA foreign_keys=ON");
             statement.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS persons (id INTEGER PRIMARY KEY NOT NULL," +
                 "fullName TEXT NOT NULL," +
@@ -40,7 +41,7 @@ public class DbHandler {
                 "purchaseDeadline INTEGER NOT NULL, " +
                 "cost INTEGER NOT NULL, " +
                 "organization TEXT NOT NULL, " +
-                "FOREIGN KEY (personId) REFERENCES persons(id))"
+                "FOREIGN KEY (personId) REFERENCES persons(id) ON DELETE CASCADE)"
             );
         }
         catch (SQLException exception) {
@@ -113,6 +114,21 @@ public class DbHandler {
         }
     }
 
+    public void editPerson(Person person, int id){
+        try (var statement = this.connection.prepareStatement(
+                "UPDATE persons" +
+                        " SET fullName = ?, phoneNumber = ?, address = ? " +
+                        "WHERE id = ?")) {
+            statement.setObject(1, person.getFullName());
+            statement.setObject(2, person.getPhoneNumber());
+            statement.setObject(3, person.getAddress());
+            statement.setObject(4, id);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Record> getRecordsList() {
         try (var statement = this.connection.createStatement()) {
             var persons = new ArrayList<Record>();
@@ -167,6 +183,26 @@ public class DbHandler {
             statement.execute();
         } catch (SQLException exception) {
             exception.printStackTrace();
+        }
+    }
+
+    public void editRecord(Record record, int id) {
+        try (var statement = this.connection.prepareStatement(
+                "UPDATE records" +
+                        " SET personId = ?, name = ?, payment = ?, date = ?, monthOfPayment = ?, purchaseDeadline = ?, cost = ?, organization = ? " +
+                        "WHERE id = ?")) {
+            statement.setObject(1, record.getPerson().getId());
+            statement.setObject(2, record.getName());
+            statement.setObject(3, record.getPayment());
+            statement.setObject(4, record.getDate());
+            statement.setObject(5, record.getMonthOfPayment());
+            statement.setObject(6, record.getPurchaseDeadline());
+            statement.setObject(7, record.getCost());
+            statement.setObject(8, record.getOrganization());
+            statement.setObject(9, id);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

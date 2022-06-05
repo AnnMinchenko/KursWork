@@ -18,6 +18,8 @@ public class PersonsView extends JDialog {
     private DbHandler handler;
     private JTable table;
     private JButton addPersonButton = new JButton("Добавить клиента");
+    private JButton removePersonButton = new JButton("Удалить клиента");
+    private JButton editPersonButton = new JButton("Изменить данные клиента");
     MainView mainView;
 
     Object[] tableHeaders = {
@@ -37,6 +39,106 @@ public class PersonsView extends JDialog {
         pack();
         setVisible(true);
     }
+
+    Action editPerson = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Запись не выбрана",
+                        "Ошибка",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            //ФИО+
+            var fullName = "";
+            while (Objects.equals(fullName, "")) {
+                fullName = JOptionPane.showInputDialog(
+                        null,
+                        "ФИО:",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (fullName == null) {
+                    return;
+                }
+            }
+
+            //Номер телефона+
+            var phoneNumber = "";
+            while (Objects.equals(phoneNumber, "") || !TELEPHONE_PATTERN.matcher(phoneNumber).matches()) {
+                phoneNumber = JOptionPane.showInputDialog(
+                        null,
+                        "Номер телефона:",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (phoneNumber == null) {
+                    return;
+                }
+            }
+
+
+            //Адрес+
+            var address = "";
+            while (Objects.equals(address, "")) {
+                address = JOptionPane.showInputDialog(
+                        null,
+                        "Адрес:",
+                        "Новая запись",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (address == null) {
+                    return;
+                }
+            }
+
+            var id = (int) table.getModel().getValueAt(row, 0);
+
+            var person = new Person(
+                    id,
+                    fullName,
+                    phoneNumber,
+                    address
+            );
+
+            handler.editPerson(person, id);
+            showPersonList();
+        }
+    };
+
+    Action removePerson = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Запись не выбрана",
+                        "Ошибка",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            int choose = JOptionPane.showConfirmDialog(
+                    null,
+                    "Вы действительно хотите удалить запись?",
+                    "Подтверждение",
+                    JOptionPane.YES_NO_OPTION);
+            if (choose == JOptionPane.NO_OPTION) {
+                return;
+            }
+            var id = (int) table.getModel().getValueAt(row, 0);
+
+            handler.deletePerson(id);
+            showPersonList();
+        }
+    };
 
     Action addPerson = new AbstractAction() {
         @Override
@@ -115,6 +217,8 @@ public class PersonsView extends JDialog {
         table.getColumnModel().getColumn(3).setMinWidth(150);
         table.setPreferredScrollableViewportSize(new Dimension(600,500));
         addPersonButton.addActionListener(addPerson);
+        removePersonButton.addActionListener(removePerson);
+        editPersonButton.addActionListener(editPerson);
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
@@ -122,6 +226,8 @@ public class PersonsView extends JDialog {
                 .addComponent(scrollPane)
                 .addGroup(layout.createParallelGroup(LEADING)
                         .addComponent(addPersonButton)
+                        .addComponent(removePersonButton)
+                        .addComponent(editPersonButton)
                 )
         );
         //layout.linkSize(SwingConstants.HORIZONTAL, addButton, showPersonsListButton);
@@ -132,7 +238,10 @@ public class PersonsView extends JDialog {
                         .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(BASELINE)
                                         .addComponent(addPersonButton))
-                                .addGroup(layout.createParallelGroup(BASELINE))
+                                .addGroup(layout.createParallelGroup(BASELINE)
+                                        .addComponent(removePersonButton))
+                                .addGroup(layout.createParallelGroup(BASELINE)
+                                        .addComponent(editPersonButton))
                         )
                 )
         );
