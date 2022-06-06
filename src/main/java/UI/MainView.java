@@ -1,6 +1,5 @@
 package UI;
 
-import model.Person;
 import model.Record;
 import db.DbHandler;
 
@@ -51,7 +50,6 @@ public class MainView extends JFrame {
             "^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$");
     private static final Pattern MONTH_PATTERN = Pattern.compile("^((19|2[0-9])[0-9]{2})-([1-9]|[0-1][0-2])$");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]+$");
-    private static final Pattern TELEPHONE_PATTERN = Pattern.compile("^89([1-9]{9})$");
 
     public DbHandler handler;
     private MainView mainView = this;
@@ -386,7 +384,15 @@ public class MainView extends JFrame {
     Action showPersonsList = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            new PersonsView(mainView);
+            String p = "Gbgtnrf456!";
+            JPasswordField pf = new JPasswordField();
+            int okCxl = JOptionPane.showConfirmDialog(null, pf, "Введите пароль", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (okCxl == JOptionPane.OK_OPTION) {
+                String password = new String(pf.getPassword());
+                if (p.equals(password))
+                    new PersonsView(mainView);
+            }
         }
     };
 
