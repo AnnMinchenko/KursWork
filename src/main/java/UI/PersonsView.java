@@ -14,12 +14,41 @@ import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
 public class PersonsView extends JDialog {
+
+    private static final class JGradientButton extends JButton{
+        private JGradientButton(String text){
+            super(text);
+            setContentAreaFilled(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g){
+            Graphics2D g2 = (Graphics2D)g.create();
+            g2.setPaint(new GradientPaint(
+                    new Point(0, 0),
+                    getBackground(),
+                    new Point(0, getHeight()/3),
+                    Color.WHITE));
+            g2.fillRect(0, 0, getWidth(), getHeight()/3);
+            g2.setPaint(new GradientPaint(
+                    new Point(0, getHeight()/3),
+                    Color.WHITE,
+                    new Point(0, getHeight()),
+                    getBackground()));
+            g2.fillRect(0, getHeight()/3, getWidth(), getHeight());
+            g2.dispose();
+
+            super.paintComponent(g);
+        }
+    }
+
+
     private static final Pattern TELEPHONE_PATTERN = Pattern.compile("^89([1-9]{9})$");
     private DbHandler handler;
     private JTable table;
-    private JButton addPersonButton = new JButton("Добавить клиента");
-    private JButton removePersonButton = new JButton("Удалить клиента");
-    private JButton editPersonButton = new JButton("Изменить данные клиента");
+    private JGradientButton addPersonButton = new JGradientButton("Добавить клиента");
+    private JGradientButton removePersonButton = new JGradientButton("Удалить клиента");
+    private JGradientButton editPersonButton = new JGradientButton("Изменить данные клиента");
     MainView mainView;
 
     Object[] tableHeaders = {
@@ -217,8 +246,11 @@ public class PersonsView extends JDialog {
         table.getColumnModel().getColumn(3).setMinWidth(150);
         table.setPreferredScrollableViewportSize(new Dimension(600,500));
         addPersonButton.addActionListener(addPerson);
+        addPersonButton.setBackground(new Color(111,195,237));
         removePersonButton.addActionListener(removePerson);
+        removePersonButton.setBackground(new Color(111,195,237));
         editPersonButton.addActionListener(editPerson);
+        editPersonButton.setBackground(new Color(111,195,237));
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
