@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.*;
+import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -42,8 +44,10 @@ public class PersonsView extends JDialog {
         }
     }
 
+    private final String filePath = "Logs.txt";
+    private Date date = new Date();
 
-    private static final Pattern TELEPHONE_PATTERN = Pattern.compile("^89([1-9]{9})$");
+    private static final Pattern TELEPHONE_PATTERN = Pattern.compile("^89([0-9]{9})$");
     private DbHandler handler;
     private JTable table;
     private JGradientButton addPersonButton = new JGradientButton("Добавить клиента");
@@ -216,8 +220,15 @@ public class PersonsView extends JDialog {
                 }
             }
 
+            int id;
+            var temp = handler.getPersonsList().size()-1;
+            if (temp < 0)
+                id = 0;
+            else
+                id = handler.getPersonsList().get(handler.getPersonsList().size()-1).getId()+1;
+
             var person = new Person(
-                    handler.getRecordsList().size(),
+                    id,
                     fullName,
                     phoneNumber,
                     address
@@ -226,7 +237,8 @@ public class PersonsView extends JDialog {
             handler.addPerson(person);
             showPersonList();
         }
-    };
+
+        };
 
     private void createView(Container contentPane) {
         var layout = new GroupLayout(contentPane);
@@ -262,7 +274,6 @@ public class PersonsView extends JDialog {
                         .addComponent(editPersonButton)
                 )
         );
-        //layout.linkSize(SwingConstants.HORIZONTAL, addButton, showPersonsListButton);
 
         layout.setVerticalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(BASELINE)

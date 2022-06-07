@@ -60,20 +60,25 @@ public class Record {
     }
 
     private void calculatePurchaseDeadline() {
-        String[] string = monthOfPayment.split("-");
-        int[] dates = new int[2];
-        dates[0] = Integer.parseInt(string[0]);
-        dates[1] = Integer.parseInt(string[1]);
 
-        var tempMonth = dates[1] + 5;
-        var tempYear = dates[0];
+        if (monthOfPayment.equals("-"))
+            purchaseDeadline = "-";
+        else {
+            String[] string = monthOfPayment.split("-");
+            int[] dates = new int[2];
+            dates[0] = Integer.parseInt(string[0]);
+            dates[1] = Integer.parseInt(string[1]);
 
-        if (tempMonth > 12) {
-            tempMonth = tempMonth - 12;
-            tempYear =+ 1;
+            var tempMonth = dates[1] + 5;
+            var tempYear = dates[0];
+
+            if (tempMonth > 12) {
+                tempMonth = tempMonth - 12;
+                tempYear = tempYear + 1;
+            }
+
+            purchaseDeadline = tempYear + "-" + tempMonth;
         }
-
-        purchaseDeadline = tempYear + "-" + tempMonth;
     }
 
     @Override

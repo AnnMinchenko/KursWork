@@ -37,8 +37,8 @@ public class DbHandler {
                 "name TEXT NOT NULL," +
                 "payment INTEGER NOT NULL," +
                 "date CHAR(10) NOT NULL," +
-                "monthOfPayment INTEGER NOT NULL," +
-                "purchaseDeadline INTEGER NOT NULL, " +
+                "monthOfPayment TEXT NOT NULL," +
+                "purchaseDeadline TEXT NOT NULL, " +
                 "cost INTEGER NOT NULL, " +
                 "organization TEXT NOT NULL, " +
                 "FOREIGN KEY (personId) REFERENCES persons(id) ON DELETE CASCADE)"
@@ -245,6 +245,64 @@ public class DbHandler {
         } catch (SQLException exception) {
             exception.printStackTrace();
             return 0;
+        }
+    }
+
+    //////////////////////////
+
+    public List<Record> getWhoBoughtList() {
+        try (var statement = this.connection.createStatement()) {
+            var persons = new ArrayList<Record>();
+            var result = statement.executeQuery(
+                    "SELECT id, personId, name, payment, date, monthOfPayment, cost, organization FROM records " +
+                            "WHERE cost > 0"
+            );
+            while (result.next()) {
+                persons.add(new Record(
+                                result.getInt("id"),
+                                getPerson(result.getInt("personId")),
+                                result.getString("name"),
+                                result.getInt("payment"),
+                                result.getString("date"),
+                                result.getString("monthOfPayment"),
+                                result.getInt("cost"),
+                                result.getString("organization")
+                        )
+                );
+            }
+            return persons;
+        }
+        catch (SQLException exception) {
+            exception.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Record> getWhoNotBoughtList() {
+        try (var statement = this.connection.createStatement()) {
+            var persons = new ArrayList<Record>();
+            var result = statement.executeQuery(
+                    "SELECT id, personId, name, payment, date, monthOfPayment, cost, organization FROM records " +
+                            "WHERE cost = 0"
+            );
+            while (result.next()) {
+                persons.add(new Record(
+                                result.getInt("id"),
+                                getPerson(result.getInt("personId")),
+                                result.getString("name"),
+                                result.getInt("payment"),
+                                result.getString("date"),
+                                result.getString("monthOfPayment"),
+                                result.getInt("cost"),
+                                result.getString("organization")
+                        )
+                );
+            }
+            return persons;
+        }
+        catch (SQLException exception) {
+            exception.printStackTrace();
+            return Collections.emptyList();
         }
     }
 }

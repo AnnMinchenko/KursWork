@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -48,8 +49,9 @@ public class MainView extends JFrame {
 
     private static final Pattern DATE_PATTERN = Pattern.compile(
             "^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$");
-    private static final Pattern MONTH_PATTERN = Pattern.compile("^((19|2[0-9])[0-9]{2})-([1-9]|[0-1][0-2])$");
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]+$");
+    private static final Pattern MONTH_PATTERN = Pattern.compile("^(((19|2[0-9])[0-9]{2})-([1-9]|[0-1][0-2]))|-$");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("^([0-9]+)$");
+    private static final String pass = "000";
 
     public DbHandler handler;
     private MainView mainView = this;
@@ -63,6 +65,9 @@ public class MainView extends JFrame {
     private JGradientButton showPersonsListButton = new JGradientButton("Список клиентов");
 
     private JGradientButton paymentSumButton = new JGradientButton("Сумма выплат");
+    private JGradientButton boughtButton = new JGradientButton("Список купивших клиентов");
+    private JGradientButton notBoughtButton = new JGradientButton("Список не купивших клиентов");
+
 
     Object[] tableHeaders = {
         "ID", "ФИО", "Наименование ТСР", "Выплата", "Дата назначения",
@@ -384,16 +389,19 @@ public class MainView extends JFrame {
     Action showPersonsList = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String p = "Gbgtnrf456!";
+
             JPasswordField pf = new JPasswordField();
             int okCxl = JOptionPane.showConfirmDialog(null, pf, "Введите пароль", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
             if (okCxl == JOptionPane.OK_OPTION) {
                 String password = new String(pf.getPassword());
-                if (p.equals(password))
+                if (pass.equals(password))
                     new PersonsView(mainView);
             }
+
+ //           new PersonsView(mainView);
         }
+
     };
 
     Action paymentSum = new AbstractAction() {
@@ -448,6 +456,8 @@ public class MainView extends JFrame {
     }
 
     private void createView(Container container) {
+
+
         var layout = new GroupLayout(container);
         container.setLayout(layout);
 
@@ -479,6 +489,10 @@ public class MainView extends JFrame {
         paymentSumButton.setBackground(new Color(111,237,187));
         showPersonsListButton.addActionListener(showPersonsList);
         showPersonsListButton.setBackground(new Color(143,111,237));
+        boughtButton.addActionListener(e -> new ResultView(mainView, true));
+        boughtButton.setBackground(new Color(111,237,187));
+        notBoughtButton.addActionListener(e -> new ResultView(mainView, false));
+        notBoughtButton.setBackground(new Color(111,237,187));
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
@@ -489,6 +503,8 @@ public class MainView extends JFrame {
                     .addComponent(editButton)
                     .addComponent(removeButton)
                     .addComponent(showPersonsListButton)
+                    .addComponent(boughtButton)
+                    .addComponent(notBoughtButton)
                     .addComponent(paymentSumButton)
             )
         );
@@ -505,6 +521,10 @@ public class MainView extends JFrame {
                             .addComponent(removeButton))
                     .addGroup(layout.createParallelGroup(BASELINE)
                             .addComponent(paymentSumButton))
+                    .addGroup(layout.createParallelGroup(BASELINE)
+                            .addComponent(boughtButton))
+                    .addGroup(layout.createParallelGroup(BASELINE)
+                            .addComponent(notBoughtButton))
                     .addGroup(layout.createParallelGroup(BASELINE)
                             .addComponent(showPersonsListButton))
                 )
