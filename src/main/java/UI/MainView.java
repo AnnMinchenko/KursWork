@@ -7,8 +7,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -49,7 +52,7 @@ public class MainView extends JFrame {
 
     private static final Pattern DATE_PATTERN = Pattern.compile(
             "^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$");
-    private static final Pattern MONTH_PATTERN = Pattern.compile("^(((19|2[0-9])[0-9]{2})-([1-9]|[0-1][0-2]))|-$");
+    private static final Pattern MONTH_PATTERN = Pattern.compile("^(((19|2[0-9])[0-9]{2})-(0[1-9]|1[0-2]))|-$");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^([0-9]+)$");
     private static final String pass = "000";
 
@@ -57,6 +60,9 @@ public class MainView extends JFrame {
     private MainView mainView = this;
 
     private JTable table;
+
+    private final String filePath = "Logs.txt";
+    private Date changeDate = new Date();
 
     private JGradientButton addButton = new JGradientButton("Добавить запись");
     private JGradientButton editButton = new JGradientButton("Изменить запись");
@@ -74,7 +80,7 @@ public class MainView extends JFrame {
         "Месяц выплаты", "Предельный срок", "Стоимость", "Организация"
     };
 
-    Action createRecord = new AbstractAction() {
+    private Action createRecord = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             var persons = handler.getPersonsList();
@@ -215,10 +221,20 @@ public class MainView extends JFrame {
 
             handler.addRecord(record);
             showRecordsList();
+
+            String lines = changeDate + " Добавлена запись: " + record + "\n";
+            try {
+                FileWriter writer = new FileWriter(filePath, true);
+                BufferedWriter bufferWriter = new BufferedWriter(writer);
+                bufferWriter.write(lines);
+                bufferWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     };
 
-    Action editRecord = new AbstractAction() {
+    private Action editRecord = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             int row = table.getSelectedRow();
@@ -354,10 +370,20 @@ public class MainView extends JFrame {
 
             handler.editRecord(record, id);
             showRecordsList();
+
+            String lines = changeDate + " Изменена запись: " + record + "\n";
+            try {
+                FileWriter writer = new FileWriter(filePath, true);
+                BufferedWriter bufferWriter = new BufferedWriter(writer);
+                bufferWriter.write(lines);
+                bufferWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     };
 
-    Action removeRecord = new AbstractAction() {
+    private Action removeRecord = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             int row = table.getSelectedRow();
@@ -381,12 +407,23 @@ public class MainView extends JFrame {
             }
             var id = (int) table.getModel().getValueAt(row, 0);
 
+            Record record = handler.getRecord(id);
+            String lines = changeDate + " Удалена запись: " + record + "\n";
+            try {
+                FileWriter writer = new FileWriter(filePath, true);
+                BufferedWriter bufferWriter = new BufferedWriter(writer);
+                bufferWriter.write(lines);
+                bufferWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
             handler.deleteRecord(id);
             showRecordsList();
         }
     };
 
-    Action showPersonsList = new AbstractAction() {
+    private Action showPersonsList = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
 
@@ -404,7 +441,7 @@ public class MainView extends JFrame {
 
     };
 
-    Action paymentSum = new AbstractAction() {
+    private Action paymentSum = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             var year = "";
@@ -456,8 +493,6 @@ public class MainView extends JFrame {
     }
 
     private void createView(Container container) {
-
-
         var layout = new GroupLayout(container);
         container.setLayout(layout);
 
@@ -532,7 +567,7 @@ public class MainView extends JFrame {
         );
     }
 
-    void showRecordsList() {
+    private void showRecordsList() {
         var recordsList = handler.getRecordsList();
         var model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);

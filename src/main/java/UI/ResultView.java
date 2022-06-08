@@ -5,14 +5,13 @@ import db.DbHandler;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 
 public class ResultView extends JDialog {
     private DbHandler handler;
     private JTable table;
-    MainView mainView;
-    Object[] tableHeaders = {
+    public MainView mainView;
+    private Object[] tableHeaders = {
             "ID", "ФИО", "Наименование ТСР", "Выплата", "Дата назначения",
             "Месяц выплаты", "Предельный срок", "Стоимость", "Организация"
     };
@@ -64,7 +63,7 @@ public class ResultView extends JDialog {
 
     }
 
-    void showResultList(boolean bought) {
+    private void showResultList(boolean bought) {
         if (bought) {
             var recordsList = handler.getWhoBoughtList();
             var model = (DefaultTableModel) table.getModel();

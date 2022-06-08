@@ -83,7 +83,7 @@ public class Record {
 
     @Override
     public String toString() {
-        return "Purchase{" +
+        return "Record{" +
                 "id=" + id +
                 ", person=" + person +
                 ", name='" + name + '\'' +

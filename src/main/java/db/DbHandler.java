@@ -21,7 +21,7 @@ public class DbHandler {
         this.connection = DriverManager.getConnection(CONNECTION_STR);
         createTables();
     }
-
+//
     private void createTables() {
         try (var statement = this.connection.createStatement()) {
             statement.executeUpdate("PRAGMA foreign_keys=ON");
@@ -126,6 +126,29 @@ public class DbHandler {
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public Record getRecord(int id) {
+        try (var statement = this.connection.prepareStatement(
+                "SELECT id, personId, name, payment, date, monthOfPayment, cost, organization FROM records WHERE id = ?"
+        )) {
+            statement.setObject(1, id);
+            var result = statement.executeQuery();
+            return new Record(
+                    result.getInt("id"),
+                    getPerson(result.getInt("personId")),
+                    result.getString("name"),
+                    result.getInt("payment"),
+                    result.getString("date"),
+                    result.getString("monthOfPayment"),
+                    result.getInt("cost"),
+                    result.getString("organization")
+            );
+        }
+        catch (SQLException exception) {
+            exception.printStackTrace();
+            return null;
         }
     }
 
@@ -247,8 +270,6 @@ public class DbHandler {
             return 0;
         }
     }
-
-    //////////////////////////
 
     public List<Record> getWhoBoughtList() {
         try (var statement = this.connection.createStatement()) {

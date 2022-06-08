@@ -53,7 +53,7 @@ public class PersonsView extends JDialog {
     private JGradientButton addPersonButton = new JGradientButton("Добавить клиента");
     private JGradientButton removePersonButton = new JGradientButton("Удалить клиента");
     private JGradientButton editPersonButton = new JGradientButton("Изменить данные клиента");
-    MainView mainView;
+    public MainView mainView;
 
     Object[] tableHeaders = {
             "ID", "ФИО", "Номер телефона", "Адрес"
@@ -73,7 +73,7 @@ public class PersonsView extends JDialog {
         setVisible(true);
     }
 
-    Action editPerson = new AbstractAction() {
+    private Action editPerson = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             int row = table.getSelectedRow();
@@ -141,10 +141,20 @@ public class PersonsView extends JDialog {
 
             handler.editPerson(person, id);
             showPersonList();
+
+            String lines = date + " Изменена запись: " + person + "\n";
+            try {
+                FileWriter writer = new FileWriter(filePath, true);
+                BufferedWriter bufferWriter = new BufferedWriter(writer);
+                bufferWriter.write(lines);
+                bufferWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     };
 
-    Action removePerson = new AbstractAction() {
+    private Action removePerson = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             int row = table.getSelectedRow();
@@ -168,12 +178,24 @@ public class PersonsView extends JDialog {
             }
             var id = (int) table.getModel().getValueAt(row, 0);
 
+            Person person = handler.getPerson(id);
+            String lines = date + " Удалена запись: " + person + "\n";
+            try {
+                FileWriter writer = new FileWriter(filePath, true);
+                BufferedWriter bufferWriter = new BufferedWriter(writer);
+                bufferWriter.write(lines);
+                bufferWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
             handler.deletePerson(id);
             showPersonList();
+
         }
     };
 
-    Action addPerson = new AbstractAction() {
+    private Action addPerson = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
 
@@ -236,6 +258,16 @@ public class PersonsView extends JDialog {
 
             handler.addPerson(person);
             showPersonList();
+
+            String lines = date + " Новая запись: " + person + "\n";
+            try {
+                FileWriter writer = new FileWriter(filePath, true);
+                BufferedWriter bufferWriter = new BufferedWriter(writer);
+                bufferWriter.write(lines);
+                bufferWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
 
         };

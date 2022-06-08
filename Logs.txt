@@ -1,0 +1,10 @@
+Wed Jun 08 00:42:44 IRKT 2022 Новая запись: Person{id=8, fullName='тиуепк', phoneNumber='89745184777', address='теир'}
+Wed Jun 08 00:49:17 IRKT 2022 Удалена запись: Person{id=7, fullName='fvec', phoneNumber='89415487523', address='brvf'}
+Wed Jun 08 00:51:05 IRKT 2022 Изменена запись: Person{id=8, fullName='тик', phoneNumber='89548156514', address='ркеав'}
+Wed Jun 08 01:21:58 IRKT 2022 Добавлена запись: Record{id=5, person=Person{id=0, fullName='Гришина Виктория Александровна', phoneNumber='89413356989', address='Ленинская ул., д. 4 кв.25'}, name='теип', payment=524, date='2020-01-01', monthOfPyment=2020-5, purchaseDeadline=2020-10, cost=581, organization='бьп'}
+Wed Jun 08 01:21:58 IRKT 2022 Изменена запись: Record{id=5, person=Person{id=0, fullName='Гришина Виктория Александровна', phoneNumber='89413356989', address='Ленинская ул., д. 4 кв.25'}, name='тирвпм', payment=415, date='2020-01-01', monthOfPyment=2020-5, purchaseDeadline=2020-10, cost=4895, organization='ипма'}
+Wed Jun 08 01:21:58 IRKT 2022 Удалена запись: Record{id=5, person=Person{id=0, fullName='Гришина Виктория Александровна', phoneNumber='89413356989', address='Ленинская ул., д. 4 кв.25'}, name='тирвпм', payment=415, date='2020-01-01', monthOfPyment=2020-5, purchaseDeadline=2020-10, cost=4895, organization='ипма'}
+Wed Jun 08 14:01:16 IRKT 2022 Удалена запись: Person{id=8, fullName='тик', phoneNumber='89548156514', address='ркеав'}
+Wed Jun 08 14:01:16 IRKT 2022 Удалена запись: Person{id=5, fullName='икпам', phoneNumber='89151515151', address='рикпмау'}
+Wed Jun 08 14:01:16 IRKT 2022 Удалена запись: Person{id=6, fullName='вам', phoneNumber='89202020202', address='иуеык'}
+Wed Jun 08 14:23:34 IRKT 2022 Удалена запись: Person{id=3, fullName='тик', phoneNumber='89145518745', address='ре4'}
