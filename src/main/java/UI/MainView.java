@@ -22,32 +22,6 @@ import static javax.swing.GroupLayout.Alignment.LEADING;
 public class MainView extends JFrame {
 
 
-    private static final class JGradientButton extends JButton{
-        private JGradientButton(String text){
-            super(text);
-            setContentAreaFilled(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g){
-            Graphics2D g2 = (Graphics2D)g.create();
-            g2.setPaint(new GradientPaint(
-                    new Point(0, 0),
-                    getBackground(),
-                    new Point(0, getHeight()/3),
-                    Color.WHITE));
-            g2.fillRect(0, 0, getWidth(), getHeight()/3);
-            g2.setPaint(new GradientPaint(
-                    new Point(0, getHeight()/3),
-                    Color.WHITE,
-                    new Point(0, getHeight()),
-                    getBackground()));
-            g2.fillRect(0, getHeight()/3, getWidth(), getHeight());
-            g2.dispose();
-
-            super.paintComponent(g);
-        }
-    }
 
 
     private static final Pattern DATE_PATTERN = Pattern.compile(
@@ -505,14 +479,14 @@ public class MainView extends JFrame {
         table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
         table.getColumnModel().getColumn(0).setMinWidth(30);
-        table.getColumnModel().getColumn(1).setMinWidth(300);
-        table.getColumnModel().getColumn(2).setMinWidth(200);
-        table.getColumnModel().getColumn(3).setMinWidth(150);
+        table.getColumnModel().getColumn(1).setMinWidth(280);
+        table.getColumnModel().getColumn(2).setMinWidth(220);
+        table.getColumnModel().getColumn(3).setMinWidth(60);
         table.getColumnModel().getColumn(4).setMinWidth(100);
         table.getColumnModel().getColumn(5).setMinWidth(100);
         table.getColumnModel().getColumn(6).setMinWidth(100);
-        table.getColumnModel().getColumn(7).setMinWidth(150);
-        table.getColumnModel().getColumn(8).setMinWidth(200);
+        table.getColumnModel().getColumn(7).setMinWidth(60);
+        table.getColumnModel().getColumn(8).setMinWidth(220);
         table.setPreferredScrollableViewportSize(new Dimension(1300,500));
         addButton.addActionListener(createRecord);
         addButton.setBackground(new Color(111,195,237));
